@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="">
+    <h1>Results</h1>
+  </div>
+  <div class="container w-100">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+          <p>
+            <b>WDSNum:</b> WDS catalog number (also the index number)<br>
+            <b>WDSName:</b> WDS name (set of coordinates)<br>
+            <b>WDS_disc:</b> WDS discoverer code <br>
+            <b>components:</b> For multiple component systems <br>(NaN if no additional components)<br>
+            <b>NOBS:</b> Number of observations <br>
+            <b>LSTDATE:</b> Year of last observation <br>
+            <b>LSTSEP:</b> WDS last separtion in arcseconds <br>
+            <b>delta_sep:</b> Change in separation (LSTSEP - FSTSEP) <br>
+            <b>delta_PA:</b> Change in position angle (|LSTPA - FSTPA|)<br>
+            <b>delta_mag_GAIA:</b> Delta magnitude calculated from GAIA magnitudes <br>(0.0 means no magnitude data) <br>
+            <b>STYPE:</b> Spectral type <br>
+            <b>NOTES:</b> Notes from the WDS <br>
+
+
+          </p>
+        </div>
+        <div class="form-group col-md-6">
+          <p>
+            <b>d_(component):</b> Distance in parsecs by GAIA <br>
+            <b>px_prob:</b> Percent probability of being close enough to be physical double <br> (calculated internally, 999 means no data) <br>
+            <b>dist_prob:</b> Percent probability of being close enough to be physical double <br> (calculated by Richard Harshaw) <br>
+            <b>PM_prob:</b> Percent liklihood of being binary based on proper motion <br>
+            <b>binary_prob:</b> Percent probability of being binary (calculated by Richard Harshaw)<br>
+            <b>physical?:</b> Binary guess (Richard Harshaw)<br>
+            <b>WDS_RA:</b> RA from WDS <br>
+            <b>WDS_Dec</b> Dec from WDS <br>
+            <b>gaia_PMRA(component):</b> Proper motion RA by GAIA <br>
+            <b>gaia_PMDEC(component):</b> Proper motion Dec by GAIA <br>
+            <b>gaia_mag_(component):</b> Component magnitude by GAIA <br>
+          </p>
+        </div>
+    </div>
+    <div class="">
+        {% for table in tables %}
+          <h2>{{titles[loop.index]}}</h2>
+            <table class=''>{{ table|safe }}</table>
+        {% endfor %}
+        <br><br>
+        <a href="/download" target="blank"><button class='btn btn-primary'>Download!</button></a><br><br>
+        <h2>Now that you have your data, verify with some of the other resources listed in the "Useful Links" box :)</h2>
+    </div>
+  </div>
+  <br><br>
+
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class='container w-75'>
+    <h1>DoubleSTARS Query</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <h3>Choose to search by WDS Name for a single candidate or apply filters to get a list of targets.</h3>
+        <br>
+        <div class="form-group">
+        <h3>Search by Candidate WDS Name for Details</h3><br>
+        <div class="form-group">
+          <label for="WDS_name">WDS Name</label>
+          <input type="text" class="form-control" id="WDS_name" name="WDS_name" placeholder="ex: 00000+4004">
+          {% for error in form.WDS_name.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </div>
+        <h3>Search by Celestial Coordinates and Other Criteria for Targets</h3><br>
+        <div class="form-group">
+          <h5>Right Ascension(RA): 000000-240000 (HHMMSS)</h5>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="min_ra">Minimum RA</label>
+            <input type='number' class="form-control" id="min-ra" name="min_ra" placeholder="HHMMSS" pattern="[0-9]{6}">
+            {% for error in form.min_ra.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+          <div class="form-group col-md-6">
+            <label for="max_ra">Maximum RA</label>
+            <input type="number" class="form-control" id="max-ra" name="max_ra" placeholder="HHMMSS" pattern='[0-9]{6}'>
+            {% for error in form.max_ra.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+        </div>
+        <br>
+        <div class="form-group">
+          <h5>Declination(Dec): [-900000, 900000] (DDMMSS)<br> Negative numbers are south of celestial equator</h5>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="min_dec">Minimum Declination</label>
+            <input type='number' class="form-control" id="min-dec" name="min_dec" placeholder="DDMMSS">
+            {% for error in form.min_dec.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+          <div class="form-group col-md-6">
+            <label for="max_dec">Maximum Declination</label>
+            <input type="number" class="form-control" id="max-dec" name="max_dec" placeholder="DDMMSS">
+            {% for error in form.max_dec.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+        </div>
+        <br>
+        <div class="form-group">
+          <h5>Primary Star Magnitude Range: Higher number goes in the 'Minimum Primary Magnitude' box.</h5>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="min_mag">Minimum Primary Magnitude</label>
+            <input type='number' class="form-control" id="min-mag" name="min_mag" placeholder="">
+            {% for error in form.min_mag.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+          <div class="form-group col-md-6">
+            <label for="max_mag">Maximum Primary Magnitude</label>
+            <input type="number" class="form-control" id="max-mag" name="max_mag" placeholder="">
+            {% for error in form.max_mag.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+        </div>
+        <br>
+        <div class="form-group">
+          <h5>Separation: Avoid minimum less than 5 and maximum greater than 50.</h5>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="min_sep">Minimum Separation</label>
+            <input type='number' class="form-control" id="min-sep" name="min_sep" placeholder="arcsecs">
+            {% for error in form.min_sep.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+          <div class="form-group col-md-6">
+            <label for="max_sep">Maximum Separation</label>
+            <input type="number" class="form-control" id="max-sep" name="max_sep" placeholder="arcsecs">
+            {% for error in form.max_sep.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+        </div>
+        <br>
+        <div class="form-group">
+          <h5>Max Delta Magnitude: How much fainter the secondary component can be. <br>
+          Keep under 3.</h5>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="max_delta_mag">Maximum Delta Magnitude</label>
+            <input type="number" class="form-control" id="max-delta-mag" name="max_delta_mag" placeholder="">
+            {% for error in form.max_delta_mag.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+        </div><br>
+        <div class="form-group">
+          <h5>Maximum Number of Observations (Use to find uncertain doubles)</h5>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="nobs">Maximum Number of Observations</label>
+            <input type='number' class="form-control" id="nobs" name="nobs" placeholder="ex: 12">
+            {% for error in form.nobs.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+        </div><br>
+        <div class="form-group">
+          <h5>Last Observation in WDS (Used to find doubles that have not been observed since that date)</h5>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="last_obs">Last Observation in WDS</label>
+            <input type='number' class="form-control" id="last_obs" name="last_obs" placeholder="Year">
+            {% for error in form.last_obs.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+        <input type="submit" class="btn btn-primary" name='submit' value="Submit">
+    </form><br><br><br>
+  </div>
+
+{% endblock %}
