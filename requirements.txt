@@ -85,9 +85,9 @@ MarkupSafe==1.1.1
 matplotlib==3.1.0
 mccabe==0.6.1
 mistune==0.8.4
-mkl-fft==1.0.12
-mkl-random==1.0.2
-mkl-service==2.0.2
+git+git://github.com/IntelPython/mkl_fft.git
+git+git://github.com/IntelPython/mkl_random.git
+git+git://github.com/ContinuumIO/mkl-service.git
 mock==3.0.5
 more-itertools==7.0.0
 mpmath==1.1.0
