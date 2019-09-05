@@ -1,4 +1,6 @@
 alabaster==0.7.12
+git+git://github.com/Anaconda-Platform/anaconda-client.git
+git+git://github.com/Anaconda-Platform/anaconda-project.git
 appnope==0.1.0
 appscript==1.0.1
 asn1crypto==0.24.0
@@ -22,7 +24,7 @@ cffi==1.12.3
 chardet==3.0.4
 Click==7.0
 cloudpickle==1.2.1
-clyent==1.2.2
+git+git://github.com/Anaconda-Platform/clyent.git
 colorama==0.4.1
 contextlib2==0.5.5
 cryptography==2.7
