@@ -1,7 +1,7 @@
-2019-09-07 18:03:08.106805
+2019-09-12 20:25:56.934611
 
 
-WDS_name : 00000+4004
+WDS_name : 00016+6437
 min_mag : None
 max_mag : None
 min_ra : None
@@ -14,4 +14,4 @@ max_delta_mag : None
 nobs : None
 last_obs : None
 submit : True
-csrf_token : Ijc2OGUwZWJiOTgwM2Y4ZDVhMWE2YjE4YTRkM2Q4YTA5ZWU2NzlmNTQi.XXRTRQ.X4F-4zv-3Kyj52nglf5lPZhZxT0
+csrf_token : ImRkODRmNTIxZjY2MGU5MDI5ZDlkOTFiZDVmMmMwYjE5MDdmN2YxYWQi.XXsMPg._mmcx5IWTsI981U46yjZPLjFT-I

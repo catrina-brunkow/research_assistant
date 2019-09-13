@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, send_file, Response
+from flask import render_template, url_for, flash, redirect, request, Response, session
 from tool import app
 from tool.forms import QueryForm
 # from flaskblog.forms import RegistrationForm, LoginForm
@@ -6,13 +6,13 @@ from tool.forms import QueryForm
 import pandas as pd
 from datetime import datetime
 import os
+from io import StringIO
 # Designate routes
 # Routes direct you to different pages
 # Don't forget to set an enviornment variable "export FLASK_APP=flaskblog.py"
 # in BASH write "flask run" to launch
 # Run in debug mode for rapid development "export FLASK_DEBUG=1"
 # Debug mode updates changes in real time.
-
 
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST']) # directs to hello with either url.
@@ -24,6 +24,8 @@ def home():
         content = form.data
         # prints to terminal. For dev and debugging purposes
         print(content)
+        # Generate a session variable to generate the download dataframe
+        session['content'] = content
         print(form.validate_on_submit())
         logged = content
         with open('log.txt', 'w+') as log_file:
@@ -41,8 +43,6 @@ def home():
             if content['WDS_name']:
                 # Gather the system and components from the master set
                 data = data[data['WDSName'] == content['WDS_name']]
-                # Save the result to a csv for download later
-                data.to_csv('result.csv', index=False)
                 # Flash the number of system components found.
                 flash(f'This system has {len(data) + 1} components.')
 
@@ -317,6 +317,8 @@ def home():
             if content['min_sep'] and content['max_sep']:
                 if not content['max_sep'] > content['min_sep']:
                     content['max_sep'] = content['min_sep'] + 5
+            # Update session['content']
+            session['content'] = content
             # by min RA
             if content['min_ra']:
                 data = data[data['WDS_RA'] >= content['min_ra']]
@@ -353,7 +355,7 @@ def home():
             # Flash the number of results found
             flash(f'Search returned {len(data)} results.')
             # Save the result to a csv for download later
-            data.to_csv('result.csv', index=False)
+            # data.to_csv('result.csv', index=False)
             # Info for the Primary component
             a_comp = data.head(20)[['WDSName', 'components', 'NOBS',
                 'LSTDATE', 'LSTSEP', 'delta_sep', 'delta_PA', 'gaia_mag_1', 'delta_mag_GAIA', 'STYPE',
@@ -369,16 +371,96 @@ def home():
             return render_template('results.html',
                 tables=[a_comp.to_html(classes='wdsgaia table'),
                     b_comp.to_html(classes='wdsgaia table')],
-                titles=['na', 'Primary Info', 'Secondary Info'])
+                titles=['na', 'Primary Info', 'Secondary Info']
+                )
+            # return redirect(url_for('results',
+            #     tables=[a_comp.to_html(classes='wdsgaia table'),
+            #         b_comp.to_html(classes='wdsgaia table')],
+            #     titles=['na', 'Primary Info', 'Secondary Info'],
+            #     data=data )
+
+        # def download(data):
+        #     returnfile = data.to_csv('test.csv')
+        #     return Response(returnfile,
+        #        mimetype="text/csv",
+        #        headers={"Content-disposition":
+        #        "attachment; filename=test.csv"})
+
 
     return render_template('home.html', form=form)
 
-@app.route('/download')
+# @app.route('/results')
+# def results(tables, titles, data):
+#     return render_template('results.html',
+#         tables=tables,
+#         titles=titles,
+#         data=data)
+
+@app.route('/download', methods=['GET', 'POST'])
 def download():
-    file = open('result.csv','r')
-    returnfile = file.read().encode('latin-1')
-    file.close()
-    return Response(returnfile,
+    # Get the query to build a dataset for download
+    content = session.get('content')
+    # Load the master dataset to build the results from
+    data = pd.read_csv('wds_gaia_master.csv', index_col=0)
+
+    # Query by WDS Name
+    if content['WDS_name']:
+        # Gather the system and components from the master set
+        data = data[data['WDSName'] == content['WDS_name']]
+        # Buffer object for csv data
+        output = StringIO()
+        data.to_csv(output)
+        # Send the file
+        return Response(output.getvalue(),
+            mimetype="text/csv",
+            headers={"Content-disposition":
+            "attachment; filename=results.csv"})
+
+    # Following are parameters for a target discovery query
+    # by min RA
+    if content['min_ra']:
+        data = data[data['WDS_RA'] >= content['min_ra']]
+    # By max RA
+    if content['max_ra']:
+        data = data[data['WDS_RA'] <= content['max_ra']]
+    # By min Dec
+    if content['min_dec']:
+        data = data[data['WDS_Dec'] >= content['min_dec']]
+    # By max Dec
+    if content['max_dec']:
+        data = data[data['WDS_Dec'] <= content['max_dec']]
+    # By min mag
+    if content['min_mag']:
+        data = data[data['gaia_mag_1'] <= content['min_mag']]
+    # By max mag
+    if content['max_mag']:
+        data = data[data['gaia_mag_1'] >= content['max_mag']]
+    # by min separation
+    if content['min_sep']:
+        data = data[data['LSTSEP'] >= content['min_sep']]
+    # By max separation
+    if content['max_sep']:
+        data = data[data['LSTSEP'] <= content['max_sep']]
+    # By delta magnitude
+    if content['max_delta_mag']:
+        data = data[data['delta_mag_GAIA'] <= content['max_delta_mag']]
+    # By Number Observations
+    if content['nobs']:
+        data = data[data['NOBS'] <= content['nobs']]
+    # By last observation year
+    if content['last_obs']:
+        data = data[data['LSTDATE'] <= content['last_obs']]
+
+    output = StringIO()
+    data.to_csv(output)
+
+    return Response(output.getvalue(),
         mimetype="text/csv",
         headers={"Content-disposition":
-                 "attachment; filename=result.csv"})
+        "attachment; filename=test.csv"}
+    )
+    # returnfile = data.to_csv('test.csv')
+    # return Response(returnfile,
+    #    mimetype="text/csv",
+       # headers={"Content-disposition":
+       # "attachment; filename=test.csv"})
