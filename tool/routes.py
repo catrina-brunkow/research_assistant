@@ -373,28 +373,8 @@ def home():
                     b_comp.to_html(classes='wdsgaia table')],
                 titles=['na', 'Primary Info', 'Secondary Info']
                 )
-            # return redirect(url_for('results',
-            #     tables=[a_comp.to_html(classes='wdsgaia table'),
-            #         b_comp.to_html(classes='wdsgaia table')],
-            #     titles=['na', 'Primary Info', 'Secondary Info'],
-            #     data=data )
-
-        # def download(data):
-        #     returnfile = data.to_csv('test.csv')
-        #     return Response(returnfile,
-        #        mimetype="text/csv",
-        #        headers={"Content-disposition":
-        #        "attachment; filename=test.csv"})
-
 
     return render_template('home.html', form=form)
-
-# @app.route('/results')
-# def results(tables, titles, data):
-#     return render_template('results.html',
-#         tables=tables,
-#         titles=titles,
-#         data=data)
 
 @app.route('/download', methods=['GET', 'POST'])
 def download():
@@ -459,8 +439,4 @@ def download():
         headers={"Content-disposition":
         "attachment; filename=test.csv"}
     )
-    # returnfile = data.to_csv('test.csv')
-    # return Response(returnfile,
-    #    mimetype="text/csv",
-       # headers={"Content-disposition":
-       # "attachment; filename=test.csv"})
+    
