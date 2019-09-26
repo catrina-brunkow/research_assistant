@@ -1,17 +1,17 @@
-2019-09-12 20:25:56.934611
+2019-09-25 20:25:09.730808
 
 
-WDS_name : 00016+6437
-min_mag : None
-max_mag : None
-min_ra : None
-max_ra : None
-min_dec : None
-max_dec : None
-min_sep : None
-max_sep : None
-max_delta_mag : None
+WDS_name : 
+min_mag : 12.0
+max_mag : 8.0
+min_ra : 124000
+max_ra : 128000
+min_dec : -78
+max_dec : -75
+min_sep : 5.0
+max_sep : 20.0
+max_delta_mag : 3.0
 nobs : None
 last_obs : None
 submit : True
-csrf_token : ImRkODRmNTIxZjY2MGU5MDI5ZDlkOTFiZDVmMmMwYjE5MDdmN2YxYWQi.XXsMPg._mmcx5IWTsI981U46yjZPLjFT-I
+csrf_token : ImRkODRmNTIxZjY2MGU5MDI5ZDlkOTFiZDVmMmMwYjE5MDdmN2YxYWQi.XYwvig.7DDjU7jrryEzp4j4mw_yz28w4WI

@@ -14,6 +14,7 @@ from io import StringIO
 # Run in debug mode for rapid development "export FLASK_DEBUG=1"
 # Debug mode updates changes in real time.
 
+
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/home", methods=['GET', 'POST']) # directs to hello with either url.
 def home():
@@ -26,7 +27,7 @@ def home():
         print(content)
         # Generate a session variable to generate the download dataframe
         session['content'] = content
-        print(form.validate_on_submit())
+        # print(form.validate())
         logged = content
         with open('log.txt', 'w+') as log_file:
             log_file.write(str(datetime.now()))
@@ -308,7 +309,7 @@ def home():
             # Check that max_dec is greater than min_dec. If not, add 10 degress
             if content['min_dec'] and content['max_dec']:
                 if not content['max_dec'] > content['min_dec']:
-                    content['max_dec'] = content['min_dec'] + 100000
+                    content['max_dec'] = content['min_dec'] + 10
             # Check that min_mag is greater than max_mag. If not, add 3 to min_mag
             if content['min_mag'] and content['max_mag']:
                 if not content['min_mag'] > content['max_mag']:
@@ -327,10 +328,10 @@ def home():
                 data = data[data['WDS_RA'] <= content['max_ra']]
             # By min Dec
             if content['min_dec']:
-                data = data[data['WDS_Dec'] >= content['min_dec']]
+                data = data[data['gaia_Dec_1'] >= content['min_dec']]
             # By max Dec
             if content['max_dec']:
-                data = data[data['WDS_Dec'] <= content['max_dec']]
+                data = data[data['gaia_Dec_1'] <= content['max_dec']]
             # By min mag
             if content['min_mag']:
                 data = data[data['gaia_mag_1'] <= content['min_mag']]
@@ -405,10 +406,10 @@ def download():
         data = data[data['WDS_RA'] <= content['max_ra']]
     # By min Dec
     if content['min_dec']:
-        data = data[data['WDS_Dec'] >= content['min_dec']]
+        data = data[data['gaia_Dec_1'] >= content['min_dec']]
     # By max Dec
     if content['max_dec']:
-        data = data[data['WDS_Dec'] <= content['max_dec']]
+        data = data[data['gaia_Dec_1'] <= content['max_dec']]
     # By min mag
     if content['min_mag']:
         data = data[data['gaia_mag_1'] <= content['min_mag']]
@@ -437,6 +438,5 @@ def download():
     return Response(output.getvalue(),
         mimetype="text/csv",
         headers={"Content-disposition":
-        "attachment; filename=test.csv"}
+        "attachment; filename=results.csv"}
     )
-    
